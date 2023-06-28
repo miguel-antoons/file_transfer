@@ -26,9 +26,7 @@ void write_file(int sockfd) {
     return;
 }
  
-int receiver() {
-    char *ip = "127.0.0.1";
-    int port = 8080;
+int receiver(char *ip, int port) {
     int e;
     
     int sockfd, new_sock;

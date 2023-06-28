@@ -19,15 +19,12 @@ void send_file(FILE *fp, int sockfd) {
     }
 }
  
-int sender() {
-    char *ip = "127.0.0.1";
-    int port = 8080;
+int sender(char *ip, int port, char *filename) {
     int e;
     
     int sockfd;
     struct sockaddr_in server_addr;
     FILE *fp;
-    char *filename = "send.txt";
     
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if(sockfd < 0) {
