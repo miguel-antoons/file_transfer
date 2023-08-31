@@ -18,12 +18,13 @@ typedef struct {
 void print_help(char* program_name) {
     printf("Usage: %s [-s|-r] [-d DEST_IP] [-p PORT] [-f FILENAME]\n", program_name);
     printf("  -s, --send        : send file\n");
-    printf("  -r, --receive     : receive file\n");
+    printf("  -r, --receive     : receive file\n");<
     printf("  -d, --destination : destination IP address to send the file to\n");
     printf("  -l, --listen      : listening IP address (only when receiving files, when specifying -r). Default is 0.0.0.0\n");
     printf("  -p, --port        : port on which to send/receive the files\n");
     printf("  -f, --filename    : filename of the file to send to remote host\n");
     printf("  -h, --help        : print this help message\n");
+    exit(0);
 }
 
 
@@ -31,6 +32,25 @@ void set_options(options_t* options, int argc, char* argv[]) {
     if (argc < 2) {
         printf("[-]Error: no arguments provided\n");
         exit(1);
+    }
+
+    int opt;
+
+    // parsing command line arguments
+    while ((opt = getopt(argc, argv, "rsp:d:f:hl:")) != -1) {
+        switch (opt) {
+            case 'r': options->sender = false;                  break;
+            case 's': options->sender = true;                   break;
+            case 'p': options->port = atoi(optarg);             break;
+            case 'd': sprintf(options->dest_ip, "%s", optarg);  break;
+            case 'f': sprintf(options->filename, "%s", optarg); break;
+            case 'h': print_help(argv[0]);                      break;
+            case 'l': sprintf(options->listen_ip, "%s", optarg);break;
+            default:
+                fprintf(stderr, "[-]Error: unknown argument.\n");
+                fprintf(stderr, "Usage: %s [-s|-r] [-d DEST_IP] [-p PORT] [-f FILENAME]\n", argv[0]);
+                exit(EXIT_FAILURE);
+        }
     }
 
     // set default values
